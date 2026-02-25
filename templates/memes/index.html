@@ -1,0 +1,229 @@
+{% load static %}
+{% include "memes/header.html" %}
+<body>
+
+
+{% include "memes/head.html" %}
+
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-content">
+    <span class="hero-badge">Gratuit & Sans compte</span>
+    <h1 class="hero-title">Crée des mèmes<br><em>en quelques secondes</em></h1>
+    <p class="hero-sub">Télécharge une image, ajoute du texte, et partage — c'est tout.</p>
+    <a href="#editor" class="cta-btn">Commencer maintenant ↓</a>
+  </div>
+  <div class="hero-samples">
+    <div class="sample-pill">😂 +12K mèmes créés</div>
+    <div class="sample-pill">⚡ Aperçu instantané</div>
+    <div class="sample-pill">📤 Partage en 1 clic</div>
+  </div>
+</section>
+
+<!-- ── EDITOR ── -->
+<section class="editor-section" id="editor">
+  <div class="editor-wrapper">
+
+    <!-- LEFT : Canvas -->
+    <div class="canvas-panel">
+      <div class="canvas-topbar">
+        <span class="panel-label">Aperçu en temps réel</span>
+        <div class="canvas-actions">
+          <button class="icon-btn" id="btn-undo" title="Annuler">↩</button>
+          <button class="icon-btn" id="btn-reset" title="Réinitialiser">🗑</button>
+        </div>
+      </div>
+
+      <div class="canvas-container" id="canvas-drop-zone">
+        <canvas id="meme-canvas" width="600" height="500"></canvas>
+        <div class="canvas-placeholder" id="canvas-placeholder">
+          <div class="placeholder-icon">🖼</div>
+          <p>Glisse une image ici<br>ou utilise le panneau de droite</p>
+        </div>
+      </div>
+
+      <div class="canvas-footer">
+        <span class="canvas-info" id="canvas-info">Aucune image chargée</span>
+        <div class="download-share-row">
+          <button class="action-btn primary" id="btn-download" disabled>
+            <span>⬇</span> Télécharger
+          </button>
+          <div class="share-group">
+            <button class="share-btn facebook" id="btn-share-fb" disabled title="Partager sur Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </button>
+            <button class="share-btn twitter" id="btn-share-tw" disabled title="Partager sur Twitter/X">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+            </button>
+            <button class="share-btn whatsapp" id="btn-share-wa" disabled title="Partager sur WhatsApp">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT : Controls -->
+    <div class="controls-panel">
+
+      <!-- STEP 1 : Upload -->
+      <div class="control-card" id="step-upload">
+        <div class="step-badge">01</div>
+        <h3 class="card-title">Image</h3>
+        <label class="upload-zone" id="upload-label" for="image-input">
+          <input type="file" id="image-input" accept="image/*" hidden>
+          <div class="upload-icon">📁</div>
+          <p class="upload-text">Clique ou glisse une image</p>
+          <p class="upload-hint">JPG, PNG, GIF, WEBP · Max 10 Mo</p>
+        </label>
+        <div class="template-label">Ou choisis un template :</div>
+        <div class="template-grid" id="template-grid">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- STEP 2 : Text Top -->
+      <div class="control-card">
+        <div class="step-badge">02</div>
+        <h3 class="card-title">Texte du haut</h3>
+        <input type="text" class="text-input" id="top-text" placeholder="QUAND TU PENSES QUE..." maxlength="80">
+        <div class="inline-controls">
+          <div class="ctrl-group">
+            <label class="ctrl-label">Taille</label>
+            <input type="range" class="slider" id="top-size" min="16" max="90" value="42">
+            <span class="slider-val" id="top-size-val">42</span>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Couleur</label>
+            <input type="color" class="color-pick" id="top-color" value="#ffffff">
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Contour</label>
+            <input type="color" class="color-pick" id="top-stroke" value="#000000">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 : Text Bottom -->
+      <div class="control-card">
+        <div class="step-badge">03</div>
+        <h3 class="card-title">Texte du bas</h3>
+        <input type="text" class="text-input" id="bottom-text" placeholder="MAIS EN FAIT NON..." maxlength="80">
+        <div class="inline-controls">
+          <div class="ctrl-group">
+            <label class="ctrl-label">Taille</label>
+            <input type="range" class="slider" id="bottom-size" min="16" max="90" value="42">
+            <span class="slider-val" id="bottom-size-val">42</span>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Couleur</label>
+            <input type="color" class="color-pick" id="bottom-color" value="#ffffff">
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label">Contour</label>
+            <input type="color" class="color-pick" id="bottom-stroke" value="#000000">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 : Style -->
+      <div class="control-card">
+        <div class="step-badge">04</div>
+        <h3 class="card-title">Style</h3>
+        <div class="font-selector">
+          <label class="ctrl-label">Police</label>
+          <div class="font-pills" id="font-pills">
+            <button class="font-pill active" data-font="Impact" style="font-family:Impact">Impact</button>
+            <button class="font-pill" data-font="Arial Black" style="font-family:'Arial Black'">Arial Black</button>
+            <button class="font-pill" data-font="Comic Sans MS" style="font-family:'Comic Sans MS'">Comic</button>
+            <button class="font-pill" data-font="Georgia" style="font-family:Georgia">Georgia</button>
+          </div>
+        </div>
+        <div class="style-toggles">
+          <button class="toggle-btn active" id="toggle-bold" title="Gras">B</button>
+          <button class="toggle-btn" id="toggle-italic" title="Italique" style="font-style:italic">I</button>
+          <button class="toggle-btn" id="toggle-caps" title="MAJUSCULES">AA</button>
+        </div>
+        <div class="ctrl-group mt-8">
+          <label class="ctrl-label">Épaisseur du contour</label>
+          <input type="range" class="slider" id="stroke-width" min="0" max="10" value="3">
+          <span class="slider-val" id="stroke-width-val">3</span>
+        </div>
+      </div>
+
+      <!-- STEP 5 : Save -->
+      <div class="control-card save-card">
+        <div class="step-badge">05</div>
+        <h3 class="card-title">Sauvegarder</h3>
+        <p class="save-hint">Enregistre ton mème dans la galerie pour le retrouver plus tard.</p>
+        <form method="POST" action="{% url 'memes:save' %}" id="save-form" enctype="multipart/form-data">
+          {% csrf_token %}
+          <!-- Image data (base64 canvas) -->
+          <input type="hidden" name="meme_data"    id="meme-data-input">
+          <!-- Textes -->
+          <input type="hidden" name="top_text"     id="hidden-top">
+          <input type="hidden" name="bottom_text"  id="hidden-bottom">
+          <!-- Typographie — remplis par JS avant soumission -->
+          <input type="hidden" name="font_name"    id="hidden-font-name">
+          <input type="hidden" name="font_size_top" id="hidden-font-size-top">
+          <input type="hidden" name="font_size_bot" id="hidden-font-size-bot">
+          <input type="hidden" name="color_top"    id="hidden-color-top">
+          <input type="hidden" name="color_bottom" id="hidden-color-bottom">
+          <!-- Couleurs contour séparées haut / bas -->
+          <input type="hidden" name="stroke_color_top" id="hidden-stroke-color-top">
+          <input type="hidden" name="stroke_color_bot" id="hidden-stroke-color-bot">
+          <input type="hidden" name="stroke_width" id="hidden-stroke-width">
+          <input type="hidden" name="is_bold"      id="hidden-is-bold">
+          <input type="hidden" name="is_italic"    id="hidden-is-italic">
+          <input type="hidden" name="is_uppercase" id="hidden-is-uppercase">
+          <button type="submit" class="action-btn full-width" id="btn-save" disabled>
+            💾 Sauvegarder dans la galerie
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY PREVIEW ── -->
+<section class="gallery-preview-section">
+  <div class="section-header">
+    <h2 class="section-title">Galerie récente</h2>
+    <a href="{% url 'memes:gallery' %}" class="see-all-link">Voir tout →</a>
+  </div>
+  <div class="gallery-grid" id="gallery-preview-grid">
+    {% for meme in recent_memes %}
+    <div class="gallery-card">
+      <div class="gallery-img-wrap">
+        <img src="{{ meme.meme_image.url }}" alt="Mème" loading="lazy">
+        <div class="gallery-overlay">
+          <a href="{% url 'memes:download' meme.id %}" class="overlay-btn">⬇ DL</a>
+        </div>
+      </div>
+      <div class="gallery-card-meta">
+        <span class="gallery-date">{{ meme.created_at|date:"d/m/Y" }}</span>
+        <form method="POST" action="{% url 'memes:delete' meme.id %}">
+          {% csrf_token %}
+          <button type="submit" class="del-btn" title="Supprimer">✕</button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <div class="gallery-empty">
+      <span>😴</span>
+      <p>Aucun mème pour l'instant. Crée-en un !</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+<div class="toast" id="toast"></div>
+
+
+{% include "memes/footer.html" %}
+
+<script src="{% static 'memes/js/editor.js' %}"></script>
+</body>
+</html>

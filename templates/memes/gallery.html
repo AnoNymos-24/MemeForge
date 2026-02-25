@@ -1,0 +1,96 @@
+{% load static %}
+{% include "memes/header.html" %}
+<body>
+
+{% include "memes/head.html" %}
+
+<section class="gallery-page-section">
+  <div class="gallery-page-header">
+    <h1 class="gallery-page-title">Galerie de mèmes</h1>
+    <p class="gallery-page-sub">{{ total_count }} mème{{ total_count|pluralize }} créé{{ total_count|pluralize }}</p>
+    <a href="{% url 'memes:index' %}" class="cta-btn">+ Créer un nouveau mème</a>
+  </div>
+
+  <div class="gallery-filters">
+    <span class="filter-label">Trier par :</span>
+    <a href="?sort=newest" class="filter-pill {% if sort == 'newest' %}active{% endif %}">Plus récents</a>
+    <a href="?sort=oldest" class="filter-pill {% if sort == 'oldest' %}active{% endif %}">Plus anciens</a>
+  </div>
+
+  <div class="gallery-masonry" id="gallery-masonry">
+    {% for meme in memes %}
+    <div class="gallery-card-full" data-id="{{ meme.id }}">
+      <div class="gallery-img-wrap">
+        <img src="{{ meme.meme_image.url }}" alt="Mème {{ meme.id }}" loading="lazy">
+        <div class="gallery-overlay gallery-overlay-full">
+          <a href="{% url 'memes:download' meme.id %}" class="overlay-btn">⬇ Télécharger</a>
+          <button class="overlay-btn share-overlay-btn"
+                  data-url="{% url 'memes:detail' meme.id %}">
+            🔗 Partager
+          </button>
+        </div>
+      </div>
+      <div class="gallery-card-meta">
+        <div class="meta-texts">
+          {% if meme.top_text %}<span class="meta-badge">Haut : {{ meme.top_text|truncatechars:25 }}</span>{% endif %}
+          {% if meme.bottom_text %}<span class="meta-badge">Bas : {{ meme.bottom_text|truncatechars:25 }}</span>{% endif %}
+        </div>
+        <div class="meta-right">
+          <span class="gallery-date">{{ meme.created_at|date:"d/m/Y H:i" }}</span>
+          <form method="POST" action="{% url 'memes:delete' meme.id %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="del-btn" title="Supprimer" onclick="return confirm('Supprimer ce mème ?')">✕</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="gallery-empty-full">
+      <span class="empty-emoji">😴</span>
+      <h2>Aucun mème pour l'instant</h2>
+      <p>Commence par créer ton premier mème !</p>
+      <a href="{% url 'memes:index' %}" class="cta-btn">Créer un mème</a>
+    </div>
+    {% endfor %}
+  </div>
+
+
+  {% if memes.has_other_pages %}
+  <div class="pagination">
+    {% if memes.has_previous %}
+      <a href="?page={{ memes.previous_page_number }}&sort={{ sort }}" class="page-btn">← Précédent</a>
+    {% endif %}
+    <span class="page-info">Page {{ memes.number }} / {{ memes.paginator.num_pages }}</span>
+    {% if memes.has_next %}
+      <a href="?page={{ memes.next_page_number }}&sort={{ sort }}" class="page-btn">Suivant →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+
+
+<div class="share-modal" id="share-modal">
+  <div class="share-modal-inner">
+    <button class="modal-close" id="modal-close">✕</button>
+    <h3>Partager ce mème</h3>
+    <div class="modal-share-btns">
+      <a id="modal-fb" href="#" target="_blank" class="modal-share-btn facebook-btn">Facebook</a>
+      <a id="modal-tw" href="#" target="_blank" class="modal-share-btn twitter-btn">Twitter / X</a>
+      <a id="modal-wa" href="#" target="_blank" class="modal-share-btn whatsapp-btn">WhatsApp</a>
+    </div>
+    <div class="modal-copy-row">
+      <input type="text" class="modal-url-input" id="modal-url" readonly>
+      <button class="modal-copy-btn" id="modal-copy">Copier</button>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" id="modal-backdrop"></div>
+
+<div class="toast" id="toast"></div>
+
+
+{% include "memes/html/footer.html" %}
+
+<script src="{% static 'memes/js/gallery.js' %}"></script>
+</body>
+</html>
