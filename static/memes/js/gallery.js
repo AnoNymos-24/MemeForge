@@ -1,9 +1,3 @@
-/**
- * MemeForge — Gallery JS
- * Handles: share modal, copy URL, toast
- */
-
-// ── Share Modal ───────────────────────────────────────────────
 const modal    = document.getElementById('share-modal');
 const backdrop = document.getElementById('modal-backdrop');
 const modalFb  = document.getElementById('modal-fb');
@@ -12,7 +6,7 @@ const modalWa  = document.getElementById('modal-wa');
 const modalUrl = document.getElementById('modal-url');
 
 function openShareModal(relativeUrl) {
-  // Build absolute URL from the relative Django URL (e.g. /meme/5/)
+
   const absoluteUrl = relativeUrl.startsWith('http')
     ? relativeUrl
     : `${window.location.origin}${relativeUrl}`;
@@ -41,7 +35,7 @@ document.querySelectorAll('.share-overlay-btn').forEach(btn => {
   });
 });
 
-// ── Copy URL ──────────────────────────────────────────────────
+
 document.getElementById('modal-copy').addEventListener('click', () => {
   navigator.clipboard.writeText(modalUrl.value)
     .then(() => showToast('🔗 Lien copié !'))
@@ -52,7 +46,6 @@ document.getElementById('modal-copy').addEventListener('click', () => {
     });
 });
 
-// ── Toast ─────────────────────────────────────────────────────
 function showToast(msg, duration = 2800) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;

@@ -1,13 +1,8 @@
-"""
-Models — memes app
-"""
 from django.db import models
 
 
 class MemeTemplate(models.Model):
-    """
-    Pre-loaded popular meme templates (managed via Django admin).
-    """
+
     name       = models.CharField(max_length=100, verbose_name="Nom")
     image      = models.ImageField(upload_to='templates/', verbose_name="Image")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -22,11 +17,8 @@ class MemeTemplate(models.Model):
 
 
 class Meme(models.Model):
-    """
-    A generated meme linked to an anonymous session.
-    Stores both the original uploaded image and the final rendered meme.
-    """
-    # Images
+
+
     original_image = models.ImageField(
         upload_to='uploads/%Y/%m/%d/',
         verbose_name="Image originale",
@@ -37,11 +29,11 @@ class Meme(models.Model):
         verbose_name="Mème généré",
     )
 
-    # Text overlays
+
     top_text    = models.CharField(max_length=200, blank=True, verbose_name="Texte du haut")
     bottom_text = models.CharField(max_length=200, blank=True, verbose_name="Texte du bas")
 
-    # Typography settings (stored for potential re-editing)
+
     font_name      = models.CharField(max_length=60,  default='Impact',   verbose_name="Police")
     font_size_top  = models.PositiveSmallIntegerField(default=42,          verbose_name="Taille texte haut")
     font_size_bot  = models.PositiveSmallIntegerField(default=42,          verbose_name="Taille texte bas")
@@ -54,10 +46,10 @@ class Meme(models.Model):
     is_italic      = models.BooleanField(default=False,                     verbose_name="Italique")
     is_uppercase   = models.BooleanField(default=True,                      verbose_name="Majuscules")
 
-    # Session (anonymous user tracking)
+
     session_key = models.CharField(max_length=40, db_index=True, verbose_name="Clé de session")
 
-    # Metadata
+
     created_at  = models.DateTimeField(auto_now_add=True, verbose_name="Créé le")
     file_size   = models.PositiveIntegerField(default=0, verbose_name="Taille fichier (octets)")
 

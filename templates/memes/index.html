@@ -20,11 +20,11 @@
   </div>
 </section>
 
-<!-- ── EDITOR ── -->
+
 <section class="editor-section" id="editor">
   <div class="editor-wrapper">
 
-    <!-- LEFT : Canvas -->
+
     <div class="canvas-panel">
       <div class="canvas-topbar">
         <span class="panel-label">Aperçu en temps réel</span>
@@ -63,10 +63,8 @@
       </div>
     </div>
 
-    <!-- RIGHT : Controls -->
     <div class="controls-panel">
 
-      <!-- STEP 1 : Upload -->
       <div class="control-card" id="step-upload">
         <div class="step-badge">01</div>
         <h3 class="card-title">Image</h3>
@@ -78,11 +76,9 @@
         </label>
         <div class="template-label">Ou choisis un template :</div>
         <div class="template-grid" id="template-grid">
-          <!-- Filled by JS -->
         </div>
       </div>
 
-      <!-- STEP 2 : Text Top -->
       <div class="control-card">
         <div class="step-badge">02</div>
         <h3 class="card-title">Texte du haut</h3>
@@ -104,7 +100,6 @@
         </div>
       </div>
 
-      <!-- STEP 3 : Text Bottom -->
       <div class="control-card">
         <div class="step-badge">03</div>
         <h3 class="card-title">Texte du bas</h3>
@@ -126,7 +121,6 @@
         </div>
       </div>
 
-      <!-- STEP 4 : Style -->
       <div class="control-card">
         <div class="step-badge">04</div>
         <h3 class="card-title">Style</h3>
@@ -151,25 +145,20 @@
         </div>
       </div>
 
-      <!-- STEP 5 : Save -->
       <div class="control-card save-card">
         <div class="step-badge">05</div>
         <h3 class="card-title">Sauvegarder</h3>
         <p class="save-hint">Enregistre ton mème dans la galerie pour le retrouver plus tard.</p>
         <form method="POST" action="{% url 'memes:save' %}" id="save-form" enctype="multipart/form-data">
           {% csrf_token %}
-          <!-- Image data (base64 canvas) -->
           <input type="hidden" name="meme_data"    id="meme-data-input">
-          <!-- Textes -->
           <input type="hidden" name="top_text"     id="hidden-top">
           <input type="hidden" name="bottom_text"  id="hidden-bottom">
-          <!-- Typographie — remplis par JS avant soumission -->
           <input type="hidden" name="font_name"    id="hidden-font-name">
           <input type="hidden" name="font_size_top" id="hidden-font-size-top">
           <input type="hidden" name="font_size_bot" id="hidden-font-size-bot">
           <input type="hidden" name="color_top"    id="hidden-color-top">
           <input type="hidden" name="color_bottom" id="hidden-color-bottom">
-          <!-- Couleurs contour séparées haut / bas -->
           <input type="hidden" name="stroke_color_top" id="hidden-stroke-color-top">
           <input type="hidden" name="stroke_color_bot" id="hidden-stroke-color-bot">
           <input type="hidden" name="stroke_width" id="hidden-stroke-width">
@@ -186,7 +175,6 @@
   </div>
 </section>
 
-<!-- ── GALLERY PREVIEW ── -->
 <section class="gallery-preview-section">
   <div class="section-header">
     <h2 class="section-title">Galerie récente</h2>

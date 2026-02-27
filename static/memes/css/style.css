@@ -1,19 +1,12 @@
-/* ════════════════════════════════════════════
-   MemeForge — Design System
-   Aesthetic: Brutalist-Electric / Dark Industrial
-   Font: Bebas Neue (display) + DM Sans (body)
-════════════════════════════════════════════ */
-
-/* ── Variables ── */
 :root {
   --bg-void:       #0a0a0c;
   --bg-card:       #111116;
   --bg-elevated:   #18181f;
   --border:        #2a2a35;
   --border-bright: #3d3d50;
-  --accent:        #f5e642;       /* electric yellow */
-  --accent-2:      #ff4d6d;       /* hot pink */
-  --accent-3:      #4dffb4;       /* neon mint */
+  --accent:        #f5e642;      
+  --accent-2:      #ff4d6d;       
+  --accent-3:      #4dffb4;      
   --text-primary:  #f0f0f5;
   --text-muted:    #7070a0;
   --text-dim:      #40405a;

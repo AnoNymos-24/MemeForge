@@ -1,17 +1,12 @@
-"""
-forms.py — MemeForge forms
-"""
 from django import forms
 from .models import Meme
 
 ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-MAX_UPLOAD_SIZE     = 10 * 1024 * 1024  # 10 MB
+MAX_UPLOAD_SIZE     = 10 * 1024 * 1024  
 
 
 class ImageUploadForm(forms.Form):
-    """
-    Used when the user uploads a raw image file.
-    """
+
     image = forms.ImageField(
         label="Image",
         error_messages={
@@ -37,10 +32,8 @@ class ImageUploadForm(forms.Form):
 
 
 class MemeCreateForm(forms.Form):
-    """
-    Receives the final meme data from the JS editor (base64 canvas + metadata).
-    """
-    meme_data    = forms.CharField(widget=forms.HiddenInput())   # base64 data URL
+
+    meme_data    = forms.CharField(widget=forms.HiddenInput())   
     top_text     = forms.CharField(max_length=200, required=False)
     bottom_text  = forms.CharField(max_length=200, required=False)
     font_name    = forms.CharField(max_length=60,  required=False, initial='Impact')
@@ -59,7 +52,7 @@ class MemeCreateForm(forms.Form):
         data = self.cleaned_data.get('meme_data', '')
         if not data.startswith('data:image/'):
             raise forms.ValidationError("Données d'image invalides.")
-        # Rough size check: base64 ≈ 4/3 of binary
+
         approx_bytes = len(data) * 3 / 4
         if approx_bytes > 20 * 1024 * 1024:
             raise forms.ValidationError("L'image est trop volumineuse.")

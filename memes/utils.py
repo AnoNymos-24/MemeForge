@@ -1,7 +1,3 @@
-"""
-utils.py — Image processing for MemeForge
-Uses Pillow to composite text onto images server-side.
-"""
 import base64
 import io
 import os
@@ -12,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 from django.conf import settings
 
 
-# ── Font helpers ──────────────────────────────────────────────
+
 
 FONT_MAP = {
     'Impact':      'Impact.ttf',
@@ -21,7 +17,7 @@ FONT_MAP = {
     'Georgia':     'georgia.ttf',
 }
 
-# Fallback font paths (Linux / Windows / macOS)
+
 SYSTEM_FONT_DIRS = [
     '/usr/share/fonts/truetype/',
     '/usr/share/fonts/',
@@ -44,14 +40,14 @@ def _find_font(font_name: str, size: int) -> ImageFont.FreeTypeFont | ImageFont.
                 return ImageFont.truetype(path, size)
             except OSError:
                 continue
-    # Pillow built-in fallback (no TTF needed)
+
     try:
         return ImageFont.load_default(size=size)
     except TypeError:
         return ImageFont.load_default()
 
 
-# ── Text drawing ──────────────────────────────────────────────
+
 
 def _wrap_text(text: str, font: ImageFont.FreeTypeFont, max_width: int, draw: ImageDraw.Draw) -> list[str]:
     """Wrap text to fit within max_width pixels."""
@@ -76,7 +72,7 @@ def _draw_text_on_image(
     img_width:   int,
     img_height:  int,
     text:        str,
-    position:    str,           # 'top' | 'bottom'
+    position:    str,         
     font_name:   str,
     font_size:   int,
     fill_color:  str,
@@ -92,7 +88,7 @@ def _draw_text_on_image(
 
     display_text = text.upper() if is_uppercase else text
 
-    # Scale font size relative to image width (base: 600px)
+
     scaled_size = max(12, int(font_size * img_width / 600))
     font = _find_font(font_name, scaled_size)
 
@@ -112,7 +108,7 @@ def _draw_text_on_image(
 
     for line in lines:
         if stroke_width > 0:
-            # Draw stroke by offsetting in 8 directions
+
             offsets = [
                 (-stroke_width, -stroke_width), (0, -stroke_width), (stroke_width, -stroke_width),
                 (-stroke_width, 0),                                   (stroke_width, 0),
@@ -127,7 +123,7 @@ def _draw_text_on_image(
         y += line_height
 
 
-# ── Main public function ──────────────────────────────────────
+
 
 def generate_meme_from_upload(
     image_file,
@@ -150,7 +146,7 @@ def generate_meme_from_upload(
     """
     img = Image.open(image_file).convert('RGBA')
 
-    # Constrain dimensions
+
     max_w = getattr(settings, 'MEME_MAX_WIDTH',  1200)
     max_h = getattr(settings, 'MEME_MAX_HEIGHT', 1200)
     img.thumbnail((max_w, max_h), Image.LANCZOS)
@@ -171,7 +167,7 @@ def generate_meme_from_upload(
             stroke_color_bot, stroke_width, is_bold, is_italic, is_uppercase,
         )
 
-    # Convert RGBA → RGB for JPEG compatibility
+
     output_img = img.convert('RGB')
     buffer = io.BytesIO()
     quality = getattr(settings, 'MEME_QUALITY', 90)
@@ -184,10 +180,7 @@ def generate_meme_from_base64(
     data_url: str,
     **kwargs,
 ) -> io.BytesIO:
-    """
-    Decode a base64 data URL (from canvas.toDataURL()) and call generate_meme_from_upload.
-    Expected format: 'data:image/png;base64,<data>'
-    """
+
     if ',' not in data_url:
         raise ValueError("Invalid data URL format")
     header, b64_data = data_url.split(',', 1)

@@ -1,10 +1,3 @@
-/**
- * MemeForge — Editor JS
- * Handles: image upload, drag & drop, template selection,
- *          real-time canvas rendering, download, share, save.
- */
-
-// ── Canvas setup ──────────────────────────────────────────────
 const canvas      = document.getElementById('meme-canvas');
 const ctx         = canvas.getContext('2d');
 const placeholder = document.getElementById('canvas-placeholder');
@@ -17,7 +10,7 @@ let isItalic     = false;
 let isUpperCase  = true;
 let selectedFont = 'Impact';
 
-// ── Meme Templates (placeholder colors, replace with real img paths) ──
+
 const TEMPLATES = [
   { name: 'Drake',       url: 'https://i.imgflip.com/30b1gx.jpg' },
   { name: 'Distracted',  url: 'https://i.imgflip.com/1ur9b0.jpg' },
@@ -25,7 +18,7 @@ const TEMPLATES = [
   { name: 'Change My Mind', url: 'https://i.imgflip.com/24y43o.jpg' },
 ];
 
-// ── Build template grid ───────────────────────────────────────
+
 const templateGrid = document.getElementById('template-grid');
 TEMPLATES.forEach((t, i) => {
   const div = document.createElement('div');
@@ -40,7 +33,7 @@ TEMPLATES.forEach((t, i) => {
   templateGrid.appendChild(div);
 });
 
-// ── Load image from URL ───────────────────────────────────────
+//Load image from URL
 function loadImageFromURL(url) {
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -69,7 +62,7 @@ function showCanvas() {
   enableButtons();
 }
 
-// ── Draw function (called on every input change) ──────────────
+//Draw function 
 function drawMeme() {
   if (!currentImage) return;
 
@@ -149,7 +142,7 @@ function wrapText(text, maxWidth) {
   return lines.length ? lines : [''];
 }
 
-// ── History (undo) ────────────────────────────────────────────
+// History
 function pushHistory() {
   history.push(canvas.toDataURL());
   if (history.length > 20) history.shift();
@@ -179,7 +172,7 @@ document.getElementById('btn-reset').addEventListener('click', () => {
   document.querySelectorAll('.template-thumb').forEach(el => el.classList.remove('selected'));
 });
 
-// ── Image upload ──────────────────────────────────────────────
+//Image upload
 document.getElementById('image-input').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (file) loadFile(file);
@@ -196,7 +189,7 @@ function loadFile(file) {
   loadImageFromURL(url);
 }
 
-// ── Drag & drop ───────────────────────────────────────────────
+// Drag & drop
 const dropZone = document.getElementById('canvas-drop-zone');
 const uploadLabel = document.getElementById('upload-label');
 
@@ -210,7 +203,7 @@ const uploadLabel = document.getElementById('upload-label');
   });
 });
 
-// ── Live redraw on input ──────────────────────────────────────
+//Live redraw on input 
 const liveInputs = ['top-text','bottom-text','top-size','bottom-size',
                     'top-color','bottom-color','top-stroke','bottom-stroke','stroke-width'];
 liveInputs.forEach(id => {
@@ -224,7 +217,7 @@ liveInputs.forEach(id => {
   }
 });
 
-// ── Font selection ────────────────────────────────────────────
+// Font selection 
 document.getElementById('font-pills').addEventListener('click', e => {
   const pill = e.target.closest('.font-pill');
   if (!pill) return;
@@ -234,7 +227,7 @@ document.getElementById('font-pills').addEventListener('click', e => {
   drawMeme();
 });
 
-// ── Style toggles ─────────────────────────────────────────────
+// Style toggles
 document.getElementById('toggle-bold').addEventListener('click', function () {
   isBold = !isBold; this.classList.toggle('active', isBold); drawMeme();
 });
@@ -245,7 +238,7 @@ document.getElementById('toggle-caps').addEventListener('click', function () {
   isUpperCase = !isUpperCase; this.classList.toggle('active', isUpperCase); drawMeme();
 });
 
-// ── Download ──────────────────────────────────────────────────
+// Download
 document.getElementById('btn-download').addEventListener('click', () => {
   if (!currentImage) return;
   drawMeme(); // fresh render
@@ -257,7 +250,7 @@ document.getElementById('btn-download').addEventListener('click', () => {
   pushHistory();
 });
 
-// ── Share ─────────────────────────────────────────────────────
+
 // NOTE : le partage depuis l'éditeur n'est disponible qu'APRÈS sauvegarde.
 // On désactive les boutons partage ici et on les réactive dans enableButtons()
 // seulement après que l'utilisateur ait explicitement sauvegardé le mème.
@@ -278,7 +271,7 @@ document.getElementById('btn-share-wa').addEventListener('click', () => {
   window.open(`https://wa.me/?text=Regarde+mon+mème+!+${encodeURIComponent(getShareURL())}`, '_blank');
 });
 
-// ── Save to gallery ───────────────────────────────────────────
+// Save to gallery
 document.getElementById('save-form').addEventListener('submit', (e) => {
   if (!currentImage) { e.preventDefault(); showToast('❌ Aucune image à sauvegarder'); return; }
   drawMeme();
@@ -306,7 +299,7 @@ document.getElementById('save-form').addEventListener('submit', (e) => {
   showToast('💾 Sauvegarde en cours...');
 });
 
-// ── Enable / Disable buttons ──────────────────────────────────
+// Enable / Disable buttons
 function enableButtons() {
   document.getElementById('btn-download').disabled  = false;
   document.getElementById('btn-save').disabled      = false;
@@ -319,7 +312,7 @@ function disableButtons() {
     .forEach(id => document.getElementById(id).disabled = true);
 }
 
-// ── Toast ─────────────────────────────────────────────────────
+
 function showToast(msg, duration = 2800) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
@@ -327,5 +320,5 @@ function showToast(msg, duration = 2800) {
   setTimeout(() => toast.classList.remove('show'), duration);
 }
 
-// ── Init ──────────────────────────────────────────────────────
+
 disableButtons();

@@ -1,7 +1,3 @@
-"""
-views.py — MemeForge
-All views for creating, saving, downloading, and managing memes.
-"""
 import io
 import uuid
 import logging
@@ -24,7 +20,6 @@ from .utils import generate_meme_from_base64, generate_meme_from_upload
 logger = logging.getLogger(__name__)
 
 
-# ── Session helper ────────────────────────────────────────────
 
 def _get_session_key(request) -> str:
     """
@@ -35,7 +30,6 @@ def _get_session_key(request) -> str:
     return request.session.session_key
 
 
-# ── Index / Editor view ───────────────────────────────────────
 
 def index(request):
     """
@@ -57,7 +51,6 @@ def index(request):
     return render(request, 'memes/index.html', context)
 
 
-# ── Save meme ─────────────────────────────────────────────────
 
 @require_POST
 def save_meme(request):
@@ -76,8 +69,7 @@ def save_meme(request):
     cd = form.cleaned_data
 
     try:
-        # Re-generate the meme server-side with Pillow for quality assurance
-        buffer = generate_meme_from_base64(
+            buffer = generate_meme_from_base64(
             data_url      = cd['meme_data'],
             top_text      = cd.get('top_text', ''),
             bottom_text   = cd.get('bottom_text', ''),
@@ -126,7 +118,6 @@ def save_meme(request):
     return redirect('memes:gallery')
 
 
-# ── Gallery view ──────────────────────────────────────────────
 
 def gallery(request):
     """
@@ -151,7 +142,6 @@ def gallery(request):
     return render(request, 'memes/gallery.html', context)
 
 
-# ── Delete meme ───────────────────────────────────────────────
 
 @require_POST
 def delete_meme(request, pk):
@@ -168,13 +158,11 @@ def delete_meme(request, pk):
     messages.success(request, "🗑 Mème supprimé.")
     logger.info("Meme #%s deleted for session %s", pk, session_key[:8])
 
-    # Return JSON for AJAX calls, redirect for normal POSTs
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'status': 'deleted', 'id': pk})
     return redirect('memes:gallery')
 
 
-# ── Download meme ─────────────────────────────────────────────
 
 @require_GET
 def download_meme(request, pk):
@@ -199,7 +187,6 @@ def download_meme(request, pk):
         return HttpResponseBadRequest("Fichier introuvable.")
 
 
-# ── Upload image (AJAX) ───────────────────────────────────────
 
 @require_POST
 def upload_image(request):
@@ -219,11 +206,10 @@ def upload_image(request):
         filename      = f"upload_{uuid.uuid4().hex[:12]}.png"
         image_content = ContentFile(buffer.read(), name=filename)
 
-        # Temporary Meme object (no text yet) — we reuse the model for storage
         temp_meme = Meme.objects.create(
             session_key   = session_key,
             original_image = image_content,
-            meme_image    = image_content,  # same for now, overwritten on save
+            meme_image    = image_content,  
         )
         return JsonResponse({
             'status':   'ok',
@@ -235,7 +221,6 @@ def upload_image(request):
         return JsonResponse({'error': "Erreur lors du traitement de l'image."}, status=500)
 
 
-# ── Meme detail (share page) ──────────────────────────────────
 
 def meme_detail(request, pk):
     """
@@ -249,7 +234,6 @@ def meme_detail(request, pk):
     return render(request, 'memes/meme_detail.html', context)
 
 
-# ── API: meme list (JSON) ─────────────────────────────────────
 
 @require_GET
 def api_meme_list(request):
